@@ -5,6 +5,10 @@
 #include <iostream>
 
 #include "Prototypes.h"
+#include "Instruction.h"
+#include "Operand.h"
+#include "Register.h"
+#include "Encoding.h"
 
 class Buffer
 {
@@ -19,70 +23,27 @@ public:
 		return buf != NULL;
 	}
 
-	void emit_sub_rsp_imm8(uint8_t value)
-	{
-		buf[occupied++] = 0x48;
-		buf[occupied++] = 0x83;
-		buf[occupied++] = 0xEC;
-		buf[occupied++] = value;
-	}
+	void emit_sub_rsp_imm8(uint8_t value);
 
-	void emit_add_rsp_imm8(uint8_t value)
-	{
-		buf[occupied++] = 0x48;
-		buf[occupied++] = 0x83;
-		buf[occupied++] = 0xC4;
-		buf[occupied++] = value;
-	}
+	void emit_add_rsp_imm8(uint8_t value);
 
-	void emit_mov_imm32_to_stack_at_offset(uint32_t imm32, uint8_t offset)
-	{
-		buf[occupied++] = 0xC7;
-		buf[occupied++] = 0x44;
-		buf[occupied++] = 0x24;
-		append_u8(offset);
-		append_u32(imm32);
-	}
+	void emit_mov_imm32_to_stack_at_offset(uint32_t imm32, uint8_t offset);
 
-	void emit_add_from_stack_at_offset_to_ecx(uint8_t offset)
-	{
-		append_u8(0x03);
-		append_u8(0x4C);
-		append_u8(0x24);
-		append_u8(offset);
-	}
+	void emit_add_from_stack_at_offset_to_ecx(uint8_t offset);
 
-	void emit_ret()
-	{
-		buf[occupied++] = 0xC2;
-	}
+	void emit_ret();
 
-	void emit_mov_imm32_into_rax(const uint32_t imm)
-	{
-		buf[occupied++] = 0x48;
-		buf[occupied++] = 0xc7;
-		buf[occupied++] = 0xc0;
-		append_u32(imm);
-	}
+	void emit_mov_imm32_into_rax(const uint32_t imm);
 
-	void emit_mov_rcx_into_rax()
-	{
-		buf[occupied++] = 0x48;
-		buf[occupied++] = 0x89;
-		buf[occupied++] = 0xC8;
-	}
+	void emit_mov_rcx_into_rax();
 
-	void append_u8(uint8_t byte)
-	{
-		buf[occupied++] = byte;
-	}
+	void append_u8(uint8_t byte);
 
-	void append_u32(uint32_t dword)
-	{
-		auto dw_ptr = (uint32_t*)&buf[occupied];
-		*dw_ptr = dword;
-		occupied += sizeof(dword);
-	}
+	void append_u32(uint32_t dword);
+
+	void emit(const Instruction& insn);
+
+	void emit_mov(const Instruction& insn);
 
 	uint8_t* data() const { return buf; }
 
