@@ -19,16 +19,42 @@ public:
 		return buf != NULL;
 	}
 
-	void emit_sub_rsp(size_t size)
+	void emit_sub_rsp_imm8(uint8_t value)
 	{
-		// TODO: support larger sizes when needed.
-		assert(size < 256);
+		buf[occupied++] = 0x48;
+		buf[occupied++] = 0x83;
+		buf[occupied++] = 0xEC;
+		buf[occupied++] = value;
+	}
+
+	void emit_add_rsp_imm8(uint8_t value)
+	{
+		buf[occupied++] = 0x48;
+		buf[occupied++] = 0x83;
+		buf[occupied++] = 0xC4;
+		buf[occupied++] = value;
+	}
+
+	void emit_mov_imm32_to_stack_at_offset(uint32_t imm32, uint8_t offset)
+	{
+		buf[occupied++] = 0xC7;
+		buf[occupied++] = 0x44;
+		buf[occupied++] = 0x24;
+		append_u8(offset);
+		append_u32(imm32);
+	}
+
+	void emit_add_from_stack_at_offset_to_ecx(uint8_t offset)
+	{
+		append_u8(0x03);
+		append_u8(0x4C);
+		append_u8(0x24);
+		append_u8(offset);
 	}
 
 	void emit_ret()
 	{
-		buf[occupied] = 0xC2;
-		occupied++;
+		buf[occupied++] = 0xC2;
 	}
 
 	void emit_mov_imm32_into_rax(const uint32_t imm)

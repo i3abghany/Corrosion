@@ -25,16 +25,23 @@ Corrosion::identity Corrosion::make_identity()
 	return MAKE_IDENTITY(buf.data());
 }
 
-
-
 Corrosion::increment_s64 Corrosion::make_increment_64()
 {
-	uint8_t* buf = (uint8_t*)VirtualAlloc(NULL, 128, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	Buffer buf{};
 	if (!buf)
 		return Corrosion::increment_s64();
-	buf[0] = 0x48;
-	buf[1] = 0x83;
-	buf[2] = 0xEC;
-	buf[3] = 0x04; // make room for 
-	return MAKE_INCREMENT_S64(buf);
+
+	buf.emit_sub_rsp_imm8(4);
+
+	// mov DWORD PTR [rsp + 0], 1
+	buf.emit_mov_imm32_to_stack_at_offset(1, 0);
+
+	// add ecx, DWORD PTR [rsp + 0]
+	buf.emit_add_from_stack_at_offset_to_ecx(0);
+
+	buf.emit_add_rsp_imm8(4);
+
+	buf.emit_mov_rcx_into_rax();
+	buf.emit_ret();
+	return MAKE_INCREMENT_S64(buf.data());
 }
