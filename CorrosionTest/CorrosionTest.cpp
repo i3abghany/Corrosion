@@ -11,13 +11,13 @@ namespace CorrosionTest
 	{
 	public:
 		
-		TEST_METHOD(MakeIdentityTest)
+		TEST_METHOD(MakeIdentity)
 		{
 			auto i = Corrosion::make_identity();
 			Assert::IsTrue((bool)i);
 		}
 
-		TEST_METHOD(InvokeIdentityTest)
+		TEST_METHOD(InvokeIdentity)
 		{
 			auto i = Corrosion::make_identity();
 			Assert::AreEqual(i(123), 123);
