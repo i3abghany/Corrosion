@@ -37,13 +37,3 @@ namespace Corrosion {
 	identity make_identity();
 	increment_s64 make_increment_64();
 };
-
-constexpr auto PREFIX_LOCK  = 0xF0;
-constexpr auto PREFIX_REPNE = 0xF2;
-constexpr auto PREFIX_REPNZ = 0xF2;
-constexpr auto PREFIX_REP   = 0xF3;
-constexpr auto PREFIX_REPE  = 0xF3;
-constexpr auto PREFIX_REPZ  = 0xF3;
-
-constexpr auto PREFIX_HINT_BRANCH_TAKEN     = 0x2E;
-constexpr auto PREFIX_HINT_BRANCH_NOT_TAKEN = 0x3E;
