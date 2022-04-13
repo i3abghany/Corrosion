@@ -38,5 +38,16 @@ namespace CorrosionTest
 			Assert::AreEqual(c(), 0);
 		}
 
+		TEST_METHOD(MakeIncrement64)
+		{
+			auto i = Corrosion::make_increment_64();
+			Assert::IsTrue((bool)i);
+		}
+
+		TEST_METHOD(InvokeIncrement64)
+		{
+			auto i = Corrosion::make_increment_64();
+			Assert::AreEqual(i(123), 124LL);
+		}
 	};
 }
