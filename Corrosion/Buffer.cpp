@@ -60,7 +60,7 @@ void Buffer::append_u32(uint32_t dword)
 
 static InstructionEncoding get_matching_encoding(const Instruction& insn, std::vector<InstructionEncoding> encs)
 {
-	const auto matching_operand = [](const OperandType op_type, const OperandEncodingType enc_type) -> bool
+	const auto match_operand = [](const OperandType op_type, const OperandEncodingType enc_type) -> bool
 	{
 		if (op_type == OperandType::Register &&
 			(enc_type == OperandEncodingType::Register || enc_type == OperandEncodingType::RegisterMemory))
@@ -77,7 +77,7 @@ static InstructionEncoding get_matching_encoding(const Instruction& insn, std::v
 
 	for (const auto& enc : encs)
 	{
-		if (!matching_operand(insn.op1.m_type, enc.op1_type) || !matching_operand(insn.op2.m_type, enc.op2_type))
+		if (!match_operand(insn.op1.m_type, enc.op1_type) || !match_operand(insn.op2.m_type, enc.op2_type))
 			continue;
 		return enc;
 	}
