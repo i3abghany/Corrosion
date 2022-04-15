@@ -3,19 +3,25 @@
 #include <cstdint>
 #include "Register.h"
 
+enum class OperandType
+{
+	None,
+	Register,
+};
+
 struct Operand
 {
-	enum class OperandType
+	Operand(Register reg)
 	{
-		REGISTER_OPERAND = 1,
-	};
-
-	Operand(OperandType type, Register reg)
-	{
-		m_type = type;
+		m_type = OperandType::Register;
 		m_reg = reg;
 	}
 
+	Operand()
+	{
+		m_type = OperandType::None;
+	}
+	
 	OperandType m_type;
 	union
 	{

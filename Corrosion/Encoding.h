@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
 
+#include "Instruction.h"
 #include "Operand.h"
 
 enum MOD
@@ -30,13 +32,28 @@ enum class ExtensionType
 
 enum class OperandEncodingType
 {
-	RegisterMemory,
+	None,
 	Register,
+	RegisterMemory,
 };
 
 struct InstructionEncoding
 {
 	uint16_t opcode;
 	ExtensionType extension;
-	OperandEncodingType op1, op2;
+	OperandEncodingType op1_type, op2_type;
 };
+
+struct MnemonicEncodings
+{
+	Mnemonic mnemonic;
+	std::vector<InstructionEncoding> encodings;
+
+	MnemonicEncodings(Mnemonic m, std::vector<InstructionEncoding> arr)
+		: mnemonic(m), encodings(std::move(arr))
+	{
+	}
+};
+
+extern MnemonicEncodings mov_encodings;
+extern MnemonicEncodings ret_encodings;

@@ -31,8 +31,6 @@ public:
 
 	void emit_add_from_stack_at_offset_to_ecx(uint8_t offset);
 
-	void emit_ret();
-
 	void emit_mov_imm32_into_rax(const uint32_t imm);
 
 	void emit_mov_rcx_into_rax();
@@ -44,6 +42,8 @@ public:
 	void emit(const Instruction& insn);
 
 	void emit_mov(const Instruction& insn);
+
+	void emit_ret(const Instruction& insn);
 
 	uint8_t* data() const { return buf; }
 

@@ -125,6 +125,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="Encoding.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="CodeGen.cpp" />
     <ClCompile Include="Operand.cpp" />
