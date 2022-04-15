@@ -46,7 +46,7 @@ void Buffer::emit_mov_imm32_into_rax(const uint32_t imm)
 
 void Buffer::emit_mov_rcx_into_rax()
 {
-	Instruction insn{ Mnemonic::mov, rcx, rax };
+	Instruction insn{ Mnemonic::mov, rax, rcx };
 	emit(insn);
 }
 
