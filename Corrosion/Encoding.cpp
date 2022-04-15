@@ -1,6 +1,6 @@
 #include "Encoding.h"
 
-MnemonicEncodings mov_encodings{
+const MnemonicEncodings mov_encodings{
 	Mnemonic::mov,
 	{
 		{
@@ -12,7 +12,7 @@ MnemonicEncodings mov_encodings{
 	}
 };
 
-MnemonicEncodings ret_encodings{
+const MnemonicEncodings ret_encodings{
 	Mnemonic::ret,
 	{
 		{
@@ -22,4 +22,10 @@ MnemonicEncodings ret_encodings{
 			OperandEncodingType::None
 		},
 	}
+};
+
+const std::unordered_map<Mnemonic, const MnemonicEncodings*> encodings_map
+{
+	{Mnemonic::mov, &mov_encodings},
+	{Mnemonic::ret, &ret_encodings}
 };

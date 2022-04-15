@@ -134,6 +134,7 @@
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Encoding.h" />
     <ClInclude Include="Instruction.h" />
+    <ClInclude Include="Macros.h" />
     <ClInclude Include="Operand.h" />
     <ClInclude Include="Prototypes.h" />
     <ClInclude Include="Register.h" />

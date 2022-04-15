@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <unordered_map>
 
 #include "Instruction.h"
 #include "Operand.h"
@@ -55,5 +56,7 @@ struct MnemonicEncodings
 	}
 };
 
-extern MnemonicEncodings mov_encodings;
-extern MnemonicEncodings ret_encodings;
+const extern MnemonicEncodings mov_encodings;
+const extern MnemonicEncodings ret_encodings;
+
+const extern std::unordered_map<Mnemonic, const MnemonicEncodings*> encodings_map;

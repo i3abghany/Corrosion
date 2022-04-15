@@ -13,10 +13,10 @@ Corrosion::const_s32 Corrosion::make_const_ret_func(int32_t val)
 	return MAKE_CONST_S32(buf.data());
 }
 
+// mov rax, rcx
+// ret
 Corrosion::identity Corrosion::make_identity()
 {
-	// mov rax, rcx
-	// ret
 	Buffer buf{};
 	if (!buf)
 		return Corrosion::identity();

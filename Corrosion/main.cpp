@@ -4,4 +4,5 @@
 
 int main()
 {
+	auto c = Corrosion::make_const_ret_func(123);
 }

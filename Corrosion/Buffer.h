@@ -48,11 +48,6 @@ public:
 
 	uint8_t* data() const { return buf; }
 
-	~Buffer()
-	{
-		VirtualFree((LPVOID)buf, 0, MEM_RELEASE);
-	}
-
 private:
 	uint8_t* buf = NULL;
 	size_t occupied = 0;

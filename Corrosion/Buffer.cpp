@@ -1,4 +1,7 @@
 #include "Buffer.h"
+#include "Macros.h"
+
+#include <unordered_map>
 
 void Buffer::emit_sub_rsp_imm8(uint8_t value)
 {
@@ -65,23 +68,8 @@ void Buffer::emit_ret(const Instruction& insn)
 	append_u8(enc.opcode);
 }
 
-void Buffer::emit(const Instruction& insn)
+static InstructionEncoding get_matching_encoding(const Instruction& insn, std::vector<InstructionEncoding> encs)
 {
-	switch (insn.mnemonic)
-	{
-	case Mnemonic::mov:
-		emit_mov(insn);
-		break;
-	case Mnemonic::ret:
-		emit_ret(insn);
-	default:
-		break;
-	}
-}
-
-static InstructionEncoding get_matching_encoding(const Instruction& insn, std::vector<InstructionEncoding> encodings)
-{
-
 	const auto matching_operand = [](const OperandType op_type, const OperandEncodingType enc_type) -> bool
 	{
 		if (op_type == OperandType::Register &&
@@ -94,21 +82,25 @@ static InstructionEncoding get_matching_encoding(const Instruction& insn, std::v
 		return false;
 	};
 
-	for (const auto& enc : mov_encodings.encodings)
+	for (const auto& enc : encs)
 	{
 		if (!matching_operand(insn.op1.m_type, enc.op1_type) || !matching_operand(insn.op2.m_type, enc.op2_type))
 			continue;
 		return enc;
 	}
 
-	assert(false);
+	VERIFY_NOT_REACHED();
 	return {};
 }
 
-void Buffer::emit_mov(const Instruction& insn)
+void Buffer::emit(const Instruction& insn)
 {
-	InstructionEncoding encoding = get_matching_encoding(insn, mov_encodings.encodings);
+	const MnemonicEncodings& encs = *encodings_map.at(insn.mnemonic);
+	InstructionEncoding encoding = get_matching_encoding(insn, encs.encodings);
 
+	// FIXME: We currently treat any register access as a 64-bit access.
+	// REX.W prefix is only relevant if one of the operands is a 64-bit
+	// or an extended register (R8 - R15)
 	if (encoding.op1_type == OperandEncodingType::Register ||
 		encoding.op2_type == OperandEncodingType::Register ||
 		encoding.op1_type == OperandEncodingType::RegisterMemory ||
@@ -120,9 +112,22 @@ void Buffer::emit_mov(const Instruction& insn)
 	// FIXME: opcode could be 2 bytes...
 	append_u8((uint8_t)encoding.opcode);
 
-	uint8_t modrm = (MOD::REGISTER_ADDR << 6) |
-		(insn.op1.m_reg.index() << 3) |
-		(insn.op2.m_reg.index());
+	bool needs_modrm = insn.op1.m_type == OperandType::Register || insn.op2.m_type == OperandType::Register;
+	if (!needs_modrm)
+		return;
 
+	uint8_t modrm = 0;
+	if (insn.op1.m_type == OperandType::Register && insn.op2.m_type == OperandType::Register)
+		modrm |= (MOD::REGISTER_ADDR << 6);
+	else
+		TODO();
+
+	if (encoding.extension == ExtensionType::REGISTER)
+		modrm |= (insn.op1.m_reg.index()) << 3;
+	else
+		TODO();
+
+	modrm |= insn.op2.m_reg.index();
+	
 	append_u8(modrm);
 }
