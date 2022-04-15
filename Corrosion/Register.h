@@ -10,10 +10,10 @@ struct Register
 		RCX = 0b0001,
 		RDX = 0b0010,
 		RBX = 0b0011,
-		RSI = 0b0100,
-		RDI,
-		RBP,
-		RSP,
+		RSP = 0b0100,
+		RBP = 0b0101,
+		RSI = 0b0110,
+		RDI = 0b0111,
 		R8,
 		R9,
 		R10,
@@ -39,6 +39,7 @@ private:
 };
 
 constexpr Register rax_reg{ Register::RegisterName::RAX };
+constexpr Register rsp_reg{ Register::RegisterName::RSP };
 constexpr Register rbx_reg{ Register::RegisterName::RBX };
 constexpr Register rcx_reg{ Register::RegisterName::RCX };
 constexpr Register rdx_reg{ Register::RegisterName::RDX };

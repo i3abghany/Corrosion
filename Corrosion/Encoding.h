@@ -6,6 +6,7 @@
 
 #include "Instruction.h"
 #include "Operand.h"
+#include "Macros.h"
 
 enum MOD
 {
@@ -36,13 +37,28 @@ enum class OperandEncodingType
 	None,
 	Register,
 	RegisterMemory,
+	Imm8,
 };
 
 struct InstructionEncoding
 {
 	uint16_t opcode;
 	ExtensionType extension;
+	uint8_t opcode_extension;
 	OperandEncodingType op1_type, op2_type;
+
+	InstructionEncoding(uint16_t opc, ExtensionType ext, OperandEncodingType o1t, OperandEncodingType o2t)
+		: opcode(opc), extension(ext), op1_type(o1t), opcode_extension(0), op2_type(o2t)
+	{
+		VERIFY(ext != ExtensionType::OPCODE);
+	}
+
+	InstructionEncoding(uint16_t opc, ExtensionType ext, uint8_t op_ext, OperandEncodingType o1t, OperandEncodingType o2t)
+		: opcode(opc), extension(ext), op1_type(o1t), opcode_extension(op_ext), op2_type(o2t)
+	{
+		VERIFY(ext == ExtensionType::OPCODE);
+	}
+
 };
 
 struct MnemonicEncodings
@@ -56,7 +72,9 @@ struct MnemonicEncodings
 	}
 };
 
+const extern MnemonicEncodings add_encodings;
 const extern MnemonicEncodings mov_encodings;
 const extern MnemonicEncodings ret_encodings;
+const extern MnemonicEncodings sub_encodings;
 
 const extern std::unordered_map<Mnemonic, const MnemonicEncodings*> encodings_map;

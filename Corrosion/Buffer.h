@@ -38,10 +38,6 @@ public:
 
 	void emit(const Instruction& insn);
 
-	void emit_mov(const Instruction& insn);
-
-	void emit_ret(const Instruction& insn);
-
 	void append_u8(uint8_t byte);
 
 	void append_u32(uint32_t dword);

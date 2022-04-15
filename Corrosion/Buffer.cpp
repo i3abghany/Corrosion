@@ -5,18 +5,14 @@
 
 void Buffer::emit_sub_rsp_imm8(uint8_t value)
 {
-	append_u8(0x48);
-	append_u8(0x83);
-	append_u8(0xEC);
-	append_u8(value);
+	Instruction insn{ Mnemonic::sub, rsp, Operand{value} };
+	emit(insn);
 }
 
 void Buffer::emit_add_rsp_imm8(uint8_t value)
 {
-	append_u8(0x48);
-	append_u8(0x83);
-	append_u8(0xC4);
-	append_u8(value);
+	Instruction insn{ Mnemonic::add, rsp, Operand{value} };
+	emit(insn);
 }
 
 void Buffer::emit_mov_imm32_to_stack_at_offset(uint32_t imm32, uint8_t offset)
@@ -62,12 +58,6 @@ void Buffer::append_u32(uint32_t dword)
 	occupied += sizeof(dword);
 }
 
-void Buffer::emit_ret(const Instruction& insn)
-{
-	auto enc = ret_encodings.encodings[0];
-	append_u8(enc.opcode);
-}
-
 static InstructionEncoding get_matching_encoding(const Instruction& insn, std::vector<InstructionEncoding> encs)
 {
 	const auto matching_operand = [](const OperandType op_type, const OperandEncodingType enc_type) -> bool
@@ -77,6 +67,9 @@ static InstructionEncoding get_matching_encoding(const Instruction& insn, std::v
 			return true;
 
 		if (op_type == OperandType::None && enc_type == OperandEncodingType::None)
+			return true;
+
+		if (op_type == OperandType::Imm8 && enc_type == OperandEncodingType::Imm8)
 			return true;
 
 		return false;
@@ -90,7 +83,6 @@ static InstructionEncoding get_matching_encoding(const Instruction& insn, std::v
 	}
 
 	VERIFY_NOT_REACHED();
-	return {};
 }
 
 void Buffer::emit(const Instruction& insn)
@@ -117,17 +109,22 @@ void Buffer::emit(const Instruction& insn)
 		return;
 
 	uint8_t modrm = 0;
-	if (insn.op1.m_type == OperandType::Register && insn.op2.m_type == OperandType::Register)
+	if (insn.op1.m_type == OperandType::Register || insn.op2.m_type == OperandType::Register)
 		modrm |= (MOD::REGISTER_ADDR << 6);
 	else
 		TODO();
 
 	if (encoding.extension == ExtensionType::REGISTER)
-		modrm |= (insn.op1.m_reg.index()) << 3;
+		modrm |= (insn.op2.m_reg.index()) << 3;
+	else if (encoding.extension == ExtensionType::OPCODE)
+		modrm |= (encoding.opcode_extension << 3);
 	else
 		TODO();
 
-	modrm |= insn.op2.m_reg.index();
+	modrm |= insn.op1.m_reg.index();
 	
 	append_u8(modrm);
+
+	if (insn.op2.m_type == OperandType::Imm8)
+		append_u8(insn.op1.u8_val);
 }

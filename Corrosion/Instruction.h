@@ -4,8 +4,10 @@
 
 enum class Mnemonic
 {
+	add,
 	mov,
 	ret,
+	sub,
 };
 
 struct Instruction
