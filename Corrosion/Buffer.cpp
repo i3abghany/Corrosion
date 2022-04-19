@@ -15,6 +15,12 @@ void Buffer::emit_add_rsp_imm8(uint8_t value)
 	emit(insn);
 }
 
+void Buffer::emit_ret()
+{
+	Instruction insn{ Mnemonic::ret };
+	emit(insn);
+}
+
 void Buffer::emit_mov_imm32_to_stack_at_offset(uint32_t imm32, uint8_t offset)
 {
 	append_u8(0xC7);
@@ -48,19 +54,19 @@ void Buffer::emit_mov_rcx_into_rax()
 
 void Buffer::append_u8(uint8_t byte)
 {
-	buf[occupied++] = byte;
+	m_buf[m_occupied++] = byte;
 }
 
 void Buffer::append_u32(uint32_t dword)
 {
-	auto dw_ptr = (uint32_t*)&buf[occupied];
+	auto dw_ptr = (uint32_t*)&m_buf[m_occupied];
 	*dw_ptr = dword;
-	occupied += sizeof(dword);
+	m_occupied += sizeof(dword);
 }
 
 static InstructionEncoding get_matching_encoding(const Instruction& insn, std::vector<InstructionEncoding> encs)
 {
-	const auto match_operand = [](const OperandType op_type, const OperandEncodingType enc_type) -> bool
+	const auto match_operands = [](const OperandType op_type, const OperandEncodingType enc_type) -> bool
 	{
 		if (op_type == OperandType::Register &&
 			(enc_type == OperandEncodingType::Register || enc_type == OperandEncodingType::RegisterMemory))
@@ -77,7 +83,7 @@ static InstructionEncoding get_matching_encoding(const Instruction& insn, std::v
 
 	for (const auto& enc : encs)
 	{
-		if (!match_operand(insn.op1.m_type, enc.op1_type) || !match_operand(insn.op2.m_type, enc.op2_type))
+		if (!match_operands(insn.op1.m_type, enc.op1_type) || !match_operands(insn.op2.m_type, enc.op2_type))
 			continue;
 		return enc;
 	}

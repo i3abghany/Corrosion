@@ -39,7 +39,18 @@ private:
 };
 
 constexpr Register rax_reg{ Register::RegisterName::RAX };
-constexpr Register rsp_reg{ Register::RegisterName::RSP };
-constexpr Register rbx_reg{ Register::RegisterName::RBX };
 constexpr Register rcx_reg{ Register::RegisterName::RCX };
 constexpr Register rdx_reg{ Register::RegisterName::RDX };
+constexpr Register rbx_reg{ Register::RegisterName::RBX };
+constexpr Register rsp_reg{ Register::RegisterName::RSP };
+constexpr Register rbp_reg{ Register::RegisterName::RBP };
+constexpr Register rsi_reg{ Register::RegisterName::RSI };
+constexpr Register rdi_reg{ Register::RegisterName::RDI };
+constexpr Register  r8_reg{ Register::RegisterName::R8  };
+constexpr Register  r9_reg{ Register::RegisterName::R9  };
+constexpr Register r10_reg{ Register::RegisterName::R10 };
+constexpr Register r11_reg{ Register::RegisterName::R11 };
+constexpr Register r12_reg{ Register::RegisterName::R12 };
+constexpr Register r13_reg{ Register::RegisterName::R13 };
+constexpr Register r14_reg{ Register::RegisterName::R14 };
+constexpr Register r15_reg{ Register::RegisterName::R15 };

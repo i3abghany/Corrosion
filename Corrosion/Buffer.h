@@ -15,13 +15,13 @@ class Buffer
 public:
 	explicit Buffer(size_t msize = 128ULL)
 	{
-		buf = (uint8_t*)VirtualAlloc(NULL, msize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
-		memory_size = msize;
+		m_buf = (uint8_t*)VirtualAlloc(NULL, msize, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+		m_memory_size = msize;
 	}
 
 	operator bool() const
 	{
-		return buf != NULL;
+		return m_buf != NULL;
 	}
 
 	void emit_sub_rsp_imm8(uint8_t value);
@@ -36,17 +36,20 @@ public:
 
 	void emit_mov_rcx_into_rax();
 
+	void emit_ret();
+
 	void emit(const Instruction& insn);
 
 	void append_u8(uint8_t byte);
 
 	void append_u32(uint32_t dword);
 
-	uint8_t* data() const { return buf; }
+	uint8_t* data() const { return m_buf; }
+	size_t occupied() const { return m_occupied; }
 
 private:
-	uint8_t* buf = NULL;
-	size_t occupied = 0;
-	size_t memory_size;
+	uint8_t* m_buf = NULL;
+	size_t m_occupied = 0;
+	size_t m_memory_size;
 };
 

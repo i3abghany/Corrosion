@@ -9,7 +9,7 @@ Corrosion::const_s32 Corrosion::make_const_ret_func(int32_t val)
 	if (!buf)
 		return Corrosion::const_s32();
 	buf.emit_mov_imm32_into_rax(val);
-	buf.emit({ Mnemonic::ret });
+	buf.emit_ret();
 	return MAKE_CONST_S32(buf.data());
 }
 
@@ -21,7 +21,7 @@ Corrosion::identity Corrosion::make_identity()
 	if (!buf)
 		return Corrosion::identity();
 	buf.emit_mov_rcx_into_rax();
-	buf.emit({ Mnemonic::ret, Operand{}, Operand{} });
+	buf.emit_ret();
 	return MAKE_IDENTITY(buf.data());
 }
 
@@ -42,6 +42,6 @@ Corrosion::increment_s64 Corrosion::make_increment_64()
 	buf.emit_add_rsp_imm8(4);
 
 	buf.emit_mov_rcx_into_rax();
-	buf.emit({ Mnemonic::ret, Operand{}, Operand{} });
+	buf.emit_ret();
 	return MAKE_INCREMENT_S64(buf.data());
 }

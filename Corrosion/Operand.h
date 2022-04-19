@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
 #include "Register.h"
 
 enum class OperandType
@@ -38,7 +39,20 @@ struct Operand
 };
 
 extern const Operand rax;
-extern const Operand rsp;
 extern const Operand rcx;
-extern const Operand rbx;
 extern const Operand rdx;
+extern const Operand rbx;
+extern const Operand rsp;
+extern const Operand rbp;
+extern const Operand rsi;
+extern const Operand rdi;
+extern const Operand r8;
+extern const Operand r9;
+extern const Operand r10;
+extern const Operand r11;
+extern const Operand r12;
+extern const Operand r13;
+extern const Operand r14;
+extern const Operand r15;
+
+extern const std::vector<Operand> register_operands;
