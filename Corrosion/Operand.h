@@ -13,13 +13,13 @@ enum class OperandType
 
 struct Operand
 {
-	Operand(Register reg)
+	explicit Operand(Register reg)
 	{
 		m_type = OperandType::Register;
 		m_reg = reg;
 	}
 
-	Operand(uint8_t value)
+	explicit Operand(uint8_t value)
 	{
 		m_type = OperandType::Imm8;
 		u8_val = value;
